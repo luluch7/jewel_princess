@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8">
+
+<title>Canvas Logo (Chapter 6)</title>
+
+</head>
+
+<body>
+
+<canvas id="canvas" width="400" height="400"></canvas>
+
+<script>
+
+/* makePath() moves the position to the first point and then iterates through the rest of the list, adding line segments along the way (it doesn't begin/close paths, so multiple subpaths can be created in the same path)*/
+function makePath(ctx, points) {
+	ctx.moveTo(points[0][0], points[0][1]);
+	for (var i=1, len=points.length; i<len; i++) {
+		ctx.lineTo(points[i][0], points[i][1]);
+	} //end of for loop
+}
+
+function drawBackground(canvas) {
+	var ctx = canvas.getContext("2d"),
+		grad,
+	    i;
+
+	    //the state is saved in the beginning and restored at the end
+	    //
+	    ctx.save();
+	    //scale coordinates to unit
+	    ctx.scale(canvas.width, canvas.height);
+
+	    grad = ctx.createRadialGradient(
+	    	0.5, 0.5, 0.125, 0.5, 0.5, 0.75
+	    );
+
+	    grad.addColorStop(0.1, "rgb(170, 180, 190)");
+	    grad.addColorStop(0.9, "rgb(50,60,70)");
+	    ctx.fillStyle = grad;
+	    ctx.fillRect(0,0,1,1);
+
+	    //star shape by adding horizontal lines
+	    //while rotating the coordinate spaces
+	    ctx.beginPath();
+	    ctx.translate(0.5, 0.5);
+	    for(i=0; i<60; i++) {
+	    	ctx.rotate(1/60 * Math.PI * 2);
+	    	ctx.lineTo (i%2 ? 0.15 : 0.75, 0);
+	    } //end of for loop
+
+	    ctx.fillStyle = "rgba(255,255,255, 0.1)";
+	    ctx.fill();
+	    ctx.restore();
+
+}//end of drawBackground(canvas)
+
+//the logo has many different shapes, so the following helper function declares these shapes as lists of points 
+function drawLogo(ctx) {
+	var logo = [
+		 	 [40, 460], [0,0], [450,0], [410,460], [225,512]
+		 	 ],
+
+		five0 = [
+             [225,208], [225,265], [295,265], [288,338], 
+             [225,355], [225,414], [341,382], [357,208], 
+              ],
+
+        five1 = [
+              [225,94], [225,150], [362,150], [367,94],
+              ],
+         
+        five2 = [
+              [225,208], [151,208], [146,150], [225,150], 
+              [225,94], [84,94], [85,109], [99,265], [225,265]
+              ],
+                
+        five3 = [
+                [225,355], [162,338], [158,293], [128,293], 
+                [102,293], [109,382], [225,414]
+                ];
+
+        //function first translates coordinates to place the origin in the center of the logo
+        ctx.save();
+        ctx.translate(-225, -256);
+        
+        //fills logo's background 
+        ctx.beginPath();
+        makePath(ctx, logo);
+        ctx.fillStyle = "#017699";
+        ctx.fill();
+
+        // adds down-scaling at the center of the logo
+        ctx.save();
+        ctx.translate(225,256);
+        ctx.scale(0.8, 0.8);
+        ctx.translate(-225,-256);
+
+        // clips the right half of the logo
+        ctx.beginPath();
+        ctx.rect(225,0,225,512);
+        ctx.clip();
+
+        // paints lighter, down-scaled logo on right half
+        ctx.beginPath();
+        makePath(ctx, logo);
+        ctx.fillStyle = "#03c6ff";
+        ctx.fill();
+        
+        // restores scaling and clipping region
+        ctx.restore();
+
+        // fills white part of "5"
+        ctx.beginPath()
+        makePath(ctx, five0);
+        makePath(ctx, five1);
+        ctx.fillStyle = "#ffffff";
+        ctx.fill();
+
+        // fills light grey part of "5"
+        ctx.beginPath();
+        makePath(ctx, five2);
+        makePath(ctx, five3);
+        ctx.fillStyle = "#ebebeb";
+        ctx.fill();
+            
+        // restores original state
+        ctx.restore();
+    } //end of drawLogo()
+
+    var canvas = document.getElementById("canvas"),
+    	ctx = canvas.getContext("2d");
+
+    	drawBackground(canvas);
+
+    //loop draws many instances of logo (randomly placed)
+    //because the state is saved and restored in each iteration of the loop, all instances are drawn independently
+    for (var i=0; i<20; i++) {
+    	ctx.save();
+
+    	var x = Math.random() * canvas.width,
+    	    y = Math.random() * canvas.height,
+    	    angle = (Math.random() - 0.5) * Math.PI,
+    	    scale = 0.05 + Math.random() * 0.1;
+
+    	//transforms coordinate space (rotates and scales logos)
+    	ctx.translate(x,y);
+    	ctx.scale(scale,scale);
+    	ctx.rotate(angle);
+
+    	drawLogo(ctx);
+    	ctx.restore();
+    } //end of for loop
+
+</script>
+
+
+</body>
+
+</html>

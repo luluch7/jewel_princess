@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8">
+
+<title>Canvas Test</title>
+
+</head>
+
+<body>
+
+<script>
+
+var canvas = document.createElement("canvas");
+document.body.appendChild(canvas);
+
+//canvas dimensions
+canvas.width  = 800;
+canvas.height = 400; 
+
+var ctx = canvas.getContext("2d"); //create a 2D context object
+
+/*
+
+//rectangle
+ctx.beginPath();
+ctx.moveTo(150, 200);
+ctx.lineTo(250, 200);
+ctx.lineTo(250, 230);
+ctx.lineTo(150, 230);
+ctx.closePath();
+
+ctx.fillStyle = "#aaeeaa"; //fill color
+ctx.fill();
+
+ctx.strokeStyle = "#111155"; //stroke color
+ctx.lineWidth = 3.0; //thicker stroke
+ctx.stroke();
+
+//triangle
+ctx.beginPath();
+ctx.moveTo(125, 50);
+ctx.lineTo(140, 140);
+ctx.lineTo(50, 125);
+ctx.closePath();
+
+ctx.fillStyle = "rgba(225,150,40,0.5)";
+ctx.fill();
+
+ctx.strokeStyle = "green";
+ctx.lineWidth = 2.0;
+ctx.stroke();
+
+//rectangle (faster method)
+ctx.beginPath();
+ctx.rect(200,250,50,30);
+ctx.fillRect = "rgba(255,150,50,1.0)";
+ctx.strokeRect(32, 32, 32, 30);
+
+//arc 
+//ctx.arc(x, y, radius, startAngle, endAngle, ccw)
+ctx.fillStyle = "#ae3ae3";
+ctx.beginPath();
+ctx.arc(220, 160, 30, 0.25 * Math.PI, 1.25 * Math.PI, true);
+ctx.closePath();
+ctx.fill();
+
+ctx.lineWidth = 2;
+ctx.strokeStyle = "#e3d4e8";
+ctx.stroke();
+
+//circle
+ctx.beginPath();
+ctx.arc(100, 100, 50, 0, 2 * Math.PI, false);
+
+ctx.lineWidth = 2;
+ctx.strokeStyle = "red";
+ctx.stroke();
+
+//quadratic curve
+//ctx.quadraticCurveTo(cx, cy, x, y);
+ctx.beginPath();
+ctx.moveTo(50, 200);
+ctx.quadraticCurveTo(425, 25, 450, 200);
+ctx.fillStyle = "#2e2e2e";
+ctx.fill();
+ctx.stroke();
+
+ctx.strokeStyle = ctx.fillStyle = "#232311";
+ctx.beginPath();
+ctx.moveTo(450, 200);
+ctx.lineTo(425, 25);
+ctx.lineTo(50, 200);
+ctx.stroke();
+ctx.fillRect(450-2, 25-2, 4, 4);
+
+*/
+
+//clipping path
+/* a for loop creates the star that will be masking out content;
+   the loop will stop running once the star has 20 sides
+*/
+
+/*
+function makeClippingPath() {
+	//star-shaped clipping path
+	ctx.beginPath();
+	ctx.moveTo(270, 200);
+	for (var i=0; i<=20; i++) {
+		ctx.lineTo(
+			200 + Math.cos(i/10 * Math.PI) * 70 * (i%2 + 1),
+			200 + Math.sin(i/10 * Math.PI) * 70 * (i%2 + 1)
+		);
+	}//end of for loop
+
+	ctx.clip();
+} //end of function
+
+//fill entire canvas
+ctx.fillStyle = "darkblue";
+ctx.fillRect(0,0,800,400);
+
+makeClippingPath();
+
+//fill canvas again
+ctx.fillStyle = "lightblue";
+ctx.fillRect(0,0,800,400);
+*/
+
+//gradient (a gradient object needs to be created)
+
+var gradient = ctx.createLinearGradient(
+	50, 50, 250, 500
+	//from (50,50) to (250,500)
+);
+
+gradient.addColorStop(0, "blue");
+gradient.addColorStop(0.6, "pink");
+gradient.addColorStop(1, "aquamarine");
+
+ctx.fillStyle = gradient;
+ctx.fillRect(0,0,800,400);
+
+//adding image: ctx.drawImage(image, dx, dy, dw, dh)
+//dx, dy, dw and dh define the rectangle where the image should go
+
+//adding text
+
+ctx.font = "30px Arial, sans-serif"
+ctx.fillText("This is a canvas test!", 400, 200);
+ctx.strokeText("This is a canvas test!", 400, 200);
+ctx.textAlign = "center";
+
+//working with shadows
+ctx.shadowColor = "black";
+ctx.shadowOffsetX = 8;
+ctx.shadowOffsetY = 8;
+ctx.shadowBlur = 10;
+
+ctx.lineWidth = 3;
+ctx.strokeStyle = "orange";
+ctx.fillStyle = "blue";
+ctx.fillRect(100,100,200,250);
+ctx.strokeRect(100,100,200,250);
+
+ctx.fillStyle = "red";
+ctx.fillRect = (50,100,150,100);
+ctx.shadowColor = "transparent";
+ctx.strokeRect(50,100,150,100);
+
+</script>
+
+
+</body>
+</html>
